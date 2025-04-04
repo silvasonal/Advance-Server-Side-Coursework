@@ -2,9 +2,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { jwtDecode } from 'jwt-decode'; 
 import './index.css';
-import Select from 'react-select';  
+import { jwtDecode } from 'jwt-decode';
+import Select from 'react-select';
+import { fetchCountryData, generateApiKey, fetchApiKeybyUserID, deleteApiKey } from './services/apiService';
 
 const Home = () => {
   const [countryData, setCountryData] = useState(null);
@@ -13,7 +14,8 @@ const Home = () => {
   const [apiKeys, setApiKeys] = useState([]);
   const [apiKeyError, setApiKeyError] = useState('');
   const [userApiKey, setUserApiKey] = useState('');
-  
+  const [userId, setUserId] = useState('');
+
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
 
@@ -23,10 +25,20 @@ const Home = () => {
       return;
     }
 
-    const decodedToken = jwtDecode(token);
-    fetchApiKeys();  
-
+    try {
+      const decodedToken = jwtDecode(token);
+      setUserId(decodedToken.userId);
+    } catch (error) {
+      console.error('Error decoding token:', error);
+    }
   }, [token, navigate]);
+
+  useEffect(() => {
+    if (userId) {
+      getApiKeys();
+    }
+  }, [userId]);
+
 
   useEffect(() => {
     axios.get('https://restcountries.com/v3.1/all')
@@ -44,45 +56,36 @@ const Home = () => {
 
   useEffect(() => {
     if (selectedCountry) {
-      fetchCountryData(selectedCountry);
+      getCountryData(selectedCountry);
     }
   }, [selectedCountry]);
 
-  const fetchCountryData = (country) => {
-    axios
-      .get(`http://localhost:3000/auth/country/${country}`, {
-        headers: {
-          'X-API-Key': userApiKey,
-        },
-      })
-      .then((response) => {
-        setCountryData(response.data);
-      })
-      .catch(() => {
-        setCountryData(null);
-      });
+  const getCountryData = async (country) => {
+    try {
+      const response = await fetchCountryData(country, userApiKey)
+      setCountryData(response.data);
+    } catch (error) {
+      console.error('Error fetching country data:', error);
+      setCountryData(null);
+    }
   };
 
   const handleGenerateApiKey = async () => {
     try {
-      const response = await axios.post('http://localhost:3000/auth/generate-api-key', {}, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setApiKeyError(''); // Clear state for any previous error
-      fetchApiKeys(); 
+      await generateApiKey(token);
+      setApiKeyError('');
+      getApiKeys();
     } catch (error) {
-      setApiKeyError('Failed to generate API key');      
+      setApiKeyError('Failed to generate API key');
     }
   };
-
-  const fetchApiKeys = async () => {
+  const getApiKeys = async () => {
     try {
-      const response = await axios.get('http://localhost:3000/auth/api-keys', {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setApiKeys(response.data);
-      if (response.data.length > 0) {
-        setUserApiKey(response.data[0].api_key);
+      const data = await fetchApiKeybyUserID(userId, token);
+      setApiKeys(data);
+
+      if (data.length > 0) {
+        setUserApiKey(data[0].api_key);
       } else {
         setApiKeyError('No API key found. Please generate one.');
       }
@@ -93,10 +96,8 @@ const Home = () => {
 
   const handleDeleteApiKey = async (id) => {
     try {
-      await axios.delete(`http://localhost:3000/auth/api-key/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      fetchApiKeys();
+      await deleteApiKey(id, token);
+      getApiKeys();
     } catch (error) {
       setApiKeyError('Failed to delete API key');
     }

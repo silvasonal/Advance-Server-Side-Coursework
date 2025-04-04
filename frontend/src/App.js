@@ -4,9 +4,9 @@ import Login from './Login';
 import Home from './Home';
 import Register from './Register';
 import UserManagement from './UserManagement';
+import ApiKeys from './ApiKeys';
 import Layout from './Layout';
 import { jwtDecode } from 'jwt-decode'; 
-
 
 const App = () => {
   const savedToken = localStorage.getItem('token');
@@ -41,6 +41,7 @@ const App = () => {
             <Route path="/home" element={<Layout handleLogout={handleLogout} username= {username} role={role} />}>
               <Route index element={<Home />} />
               <Route path="user-management" element={<UserManagement />} />
+              <Route path="api-keys" element={<ApiKeys />} />
             </Route>
             <Route path="*" element={<Navigate to="/home" />} />
           </>

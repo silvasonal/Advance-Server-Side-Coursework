@@ -13,7 +13,10 @@ const Layout = ({ handleLogout, username, role }) => {
           <Nav className="me-auto">
             <Nav.Link href="/home">Home</Nav.Link>
             {role === 'admin' && (
-                <Nav.Link href="/home/user-management">User Management</Nav.Link>
+                <>
+                    <Nav.Link href="/home/user-management">User Management</Nav.Link>
+                    <Nav.Link href="/home/api-keys">Api Keys</Nav.Link>
+                </>
             )}
           </Nav>
         </Container>
@@ -25,10 +28,7 @@ const Layout = ({ handleLogout, username, role }) => {
             </button>
         </div>
       </Navbar>
-
-     
-
-      <Outlet />
+      <Outlet/>
     </div>
   );
 };

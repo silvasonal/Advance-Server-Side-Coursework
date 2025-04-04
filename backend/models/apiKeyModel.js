@@ -14,4 +14,8 @@ const getApiKeysByUserId = async (userId) => {
     return apiKeyDAO.getApiKeysByUserId(userId);
 };
 
-module.exports = { generateApiKey, deleteApiKey, getApiKeysByUserId };
+const getApiKeys = async () => {
+    return apiKeyDAO.getApiKeys();
+};
+
+module.exports = { generateApiKey, deleteApiKey, getApiKeysByUserId, getApiKeys };

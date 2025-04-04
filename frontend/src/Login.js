@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import TextInput from './SharedComponents/TextInput';
 import './index.css'; 
 import SharedSnackbar from './SharedComponents/SharedSnackbar';
+import {loginUser} from './services/apiService'; 
 
 const Login = ({ setToken }) => {
     const [username, setUsername] = useState('');
@@ -13,8 +13,7 @@ const Login = ({ setToken }) => {
 
     const handleLogin = async () => {
         try {
-            const response = await axios.post('http://localhost:3000/auth/login', { username, password });
-            const { token } = response.data;
+            const { token } = await loginUser(username, password); 
 
             localStorage.setItem('token', token);
             setToken(token);

@@ -78,13 +78,15 @@ router.delete('/api-key/:id', authenticateToken, async (req, res) => {
 });
 
 // Get API Keys by User ID Route
-router.get('/api-keys', authenticateToken, async (req, res) => {
+router.get('/api-keys/:userId', authenticateToken, async (req, res) => {
   try {
-      const apiKeys = await apiKeyModel.getApiKeysByUserId(req.user.userId);
-      res.status(200).json(apiKeys);
+    const { userId } = req.params;
+
+    const apiKeys = await apiKeyModel.getApiKeysByUserId(userId);
+    res.status(200).json(apiKeys);
   } catch (error) {
-      console.error('Error fetching API keys:', error);
-      res.status(500).json({ error: 'Error fetching API keys' });
+    console.error('Error fetching API keys:', error);
+    res.status(500).json({ error: 'Error fetching API keys' });
   }
 });
 
@@ -173,6 +175,19 @@ router.get('/users/', authenticateToken, async (req, res) => {
   }
 });
 
+//Get all apiKeys route
+router.get('/apiKeys/', authenticateToken, async (req, res) => {
+  try {
+    const users = await apiKeyModel.getApiKeys();
+
+    if (users.error) {
+      return res.status(500).json({ error: users.error });
+    }
+    res.status(200).json(users);
+  } catch (error) { 
+    console.error('Error fetching users:', error);
+  }
+});
 
 module.exports = router;
 

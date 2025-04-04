@@ -1,7 +1,7 @@
-// UserManagement.js
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import { fetchUsers, updateUserRole } from './services/apiService'; 
 import SharedSnackbar from './SharedComponents/SharedSnackbar';
+import './index.css';
 
 const UserManagement = () => {
     const [users, setUsers] = useState([]);
@@ -10,17 +10,15 @@ const UserManagement = () => {
     const token = localStorage.getItem('token');
 
     useEffect(() => {
-        fetchUsers();
+        fetchData();
     }, [token]);
 
-    const fetchUsers = async () => {
+    const fetchData = async () => {
         try {
-            const response = await axios.get('http://localhost:3000/auth/users', {
-                headers: { Authorization: `Bearer ${token}` },
-            });
-            setUsers(response.data);
+            const fetchedUsers = await fetchUsers(token);
+            setUsers(fetchedUsers);
         } catch (error) {
-            console.error('Failed to fetch users:', error);
+            console.error('Error fetching users:', error);
         }
     };
 
@@ -33,61 +31,54 @@ const UserManagement = () => {
 
     const saveChanges = async () => {
         try {
-            for(const userId in updatedRoles){
-                const newrRole = updatedRoles[userId];
-                const url = newrRole === "admin" 
-                    ? `http://localhost:3000/auth/make-admin/${userId}` 
-                    : `http://localhost:3000/auth/make-user/${userId}`;
-                await axios.patch(url, {}, {
-                    headers: { Authorization: `Bearer ${token}` },
-                });
+            for (const userId in updatedRoles) {
+                const newRole = updatedRoles[userId];
+                await updateUserRole(userId, newRole, token); 
             }
             setSnackbar({ open: true, message: 'Changes saved successfully', severity: 'success' });
-            fetchUsers(); 
+            fetchData(); 
             setUpdatedRoles({}); 
         } catch (error) {
             console.error('Failed to save changes:', error);
             setSnackbar({ open: true, message: 'Failed to save changes', severity: 'error' });
-        }                                  
+        }
     };
-    
 
     return (
         <div className="user-list-section">
-        <h3>User List</h3>
-        <table className="user-table">
-            <thead>
-                <tr>
-                    <th>Username</th>
-                    <th>Admin</th>
-                </tr>
-            </thead>
-            <tbody>
-                {users.map(user => (
-                    <tr key={user.id}>
-                        <td>{user.username}</td>
-                        <td>
-                            {/* Admin Checkbox */}
-                            <input
-                                type="checkbox"
-                                checked={updatedRoles[user.id] ? updatedRoles[user.id] === "admin" : user.role === "admin"} 
-                                onChange={(e) => handleRoleChange(user.id, e.target.checked ? "admin" : "user")}  
-                            />
-                        </td>
+            <h3>User List</h3>
+            <table className="user-table">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Admin</th>
                     </tr>
-                ))}
-            </tbody>
-        </table>
-    
-        {/* Save Changes Button */}
-        <div className="save-changes-section">
-            <button className="save-changes-btn" onClick={saveChanges}>
-                Save Changes
-            </button>
+                </thead>
+                <tbody>
+                    {users.map((user) => (
+                        <tr key={user.id}>
+                            <td>{user.username}</td>
+                            <td>
+                                <input
+                                    type="checkbox"
+                                    checked={updatedRoles[user.id] ? updatedRoles[user.id] === 'admin' : user.role === 'admin'}
+                                    onChange={(e) =>
+                                        handleRoleChange(user.id, e.target.checked ? 'admin' : 'user')
+                                    }
+                                />
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+
+            <div className="save-changes-section">
+                <button className="save-changes-btn" onClick={saveChanges}>
+                    Save Changes
+                </button>
+            </div>
+            <SharedSnackbar snackbar={snackbar} setSnackbar={setSnackbar} />
         </div>
-        <SharedSnackbar snackbar={snackbar} setSnackbar={setSnackbar} />
-    </div>    
- 
     );
 };
 

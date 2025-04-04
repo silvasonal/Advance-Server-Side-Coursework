@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import TextInput from './SharedComponents/TextInput';
 import './index.css'; 
 import SharedSnackbar from './SharedComponents/SharedSnackbar';
-
+import { registerUser} from './services/apiService'; 
 
 const Register = () => {
     const [username, setUsername] = useState('');
@@ -14,14 +13,13 @@ const Register = () => {
 
     const handleRegister = async () => {
         try {
-            await axios.post('http://localhost:3000/auth/register', { username, password });
+            const response = await registerUser(username, password);
             setSnackbar({ open: true, message: 'Registration successful!', severity: 'success' });
             setTimeout(() => {
                 navigate('/login');
             } , 1500);
         } catch (error) {
-            // console.error('Registration failed', error);
-            console.log("error",  error.response.data.error );
+            console.error('Registration failed', error);
             setSnackbar({ open: true, message: error.response.data.error, severity: 'error' });
         }
     };
