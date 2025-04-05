@@ -15,6 +15,7 @@ const Home = () => {
   const [apiKeyError, setApiKeyError] = useState('');
   const [userApiKey, setUserApiKey] = useState('');
   const [userId, setUserId] = useState('');
+  const [countryDataError, setCountryDataError] = useState('');  
 
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
@@ -62,10 +63,18 @@ const Home = () => {
 
   const getCountryData = async (country) => {
     try {
-      const response = await fetchCountryData(country, userApiKey)
-      setCountryData(response.data);
+      const response = await fetchCountryData(country, userApiKey);
+      
+      if (response ) {
+        setCountryData(response);  
+      } else {
+        console.error('No valid country data found in the response');
+        setCountryData(null);
+        setCountryDataError('No country data found.');  
+      }
+      
     } catch (error) {
-      console.error('Error fetching country data:', error);
+      console.error('Error fetching country data:', error.response?.data || error.message || error);
       setCountryData(null);
     }
   };
@@ -137,7 +146,15 @@ const Home = () => {
         />
       </div>
 
-      {countryData && (
+
+      {/* Country Data display */}
+      {countryDataError && (
+        <div className="error-message">
+          <p>{countryDataError}</p>
+        </div>
+      )}
+
+      {countryData && !countryDataError && (
         <div className="country-data">
           <h3>Country Information</h3>
           <p><strong>Name:</strong> {countryData.name}</p>
