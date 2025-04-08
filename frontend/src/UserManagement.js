@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { fetchUsers, updateUserRole } from './services/apiService'; 
 import SharedSnackbar from './SharedComponents/SharedSnackbar';
-import './index.css';
+import './styles/index.css'; 
 
 const UserManagement = () => {
     const [users, setUsers] = useState([]);
@@ -60,6 +60,7 @@ const UserManagement = () => {
                             <td>{user.username}</td>
                             <td>
                                 <input
+                                    id={`usrmgmnt_admin_checkbox_${user.id}`}
                                     type="checkbox"
                                     checked={updatedRoles[user.id] ? updatedRoles[user.id] === 'admin' : user.role === 'admin'}
                                     onChange={(e) =>
@@ -73,7 +74,7 @@ const UserManagement = () => {
             </table>
 
             <div className="save-changes-section">
-                <button className="save-changes-btn" onClick={saveChanges}>
+                <button className="save-changes-btn" id = "usrmgmnt_save_changes_btn" onClick={saveChanges}>
                     Save Changes
                 </button>
             </div>

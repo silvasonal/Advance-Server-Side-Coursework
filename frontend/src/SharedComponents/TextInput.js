@@ -1,5 +1,5 @@
 import React from 'react';
-import '../index.css';
+import '../styles/index.css';
 
 const TextInput = ({ id, label, type, value, onChange, placeholder, required,errorMessage }) => {
   return (

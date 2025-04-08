@@ -12,16 +12,15 @@ body {
 
 .form-card {
   background: white;
-  padding: 2rem;
+  padding: 3rem;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  width: 350px;
+  width: 400px;
   text-align: center;
 }
 
-.login-card h2 {
-  margin-bottom: 1.5rem;
-  color: #333;
+.form-card h2 {
+  margin-bottom: 20px;
 }
 
 .input-group {
@@ -46,6 +45,7 @@ body {
   width: 100%;
   padding: 0.75rem;
   margin-top: 1rem;
+  margin-bottom: 1rem;
   border: none;
   border-radius: 5px;
   background-color: #007bff;
@@ -81,25 +81,17 @@ body {
   border-radius: 5px;
   cursor: pointer;
   margin-left: 30px;
+  gap: 5px;
+  display: flex;
+  align-items: center;
+  transition: background-color 0.3s ease;
 }
 
 .logout-button:hover {
   background-color: #ff1a1a;
 }
 
-.api-keys-section .api-key-list li button {
-  background-color: #ff4c4c;
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.api-keys-section .api-key-list li button:hover {
-  background-color: #ff1a1a;
-}
-
+/* API Keys Section */
 .api-keys-section .generate-api-key-btn {
   background-color: #007bff;
   color: white;
@@ -115,6 +107,13 @@ body {
 
 .api-keys-section .generate-api-key-btn:hover {
   background-color: #0056b3;
+}
+
+.api-keys-section .generate-api-key-btn:disabled {
+  background-color: #a8c5f5; 
+  color: #eee;
+  cursor: not-allowed;
+  opacity: 0.6;
 }
 
 .api-keys-section .api-key-list {
@@ -169,7 +168,7 @@ body {
 }
 
 
-/* Country Data Styles */
+/* Country Data Container */
 .country-data {
   background-color: #ffffff;
   padding: 0.5rem;
@@ -263,7 +262,6 @@ body {
   opacity: 0.5;
 }
 
-
 /* Admin User List Styles */
 .user-list-section {
   margin: 20px auto;
@@ -282,7 +280,6 @@ body {
   font-size: 2rem;
   color: #333;
   margin-bottom: 20px;
-  text-align: center;
 }
 
 .user-table {
@@ -340,7 +337,6 @@ body {
 
 
 /* User Management Section */
-
 .user-management-btn {
   background-color: #007bff;
   color: white;
@@ -368,8 +364,8 @@ body {
 }
 
 .api-title {
-  color: #2c3e50;
-  font-size: 24px;
+  font-size: 2rem;
+  color: #333;
   margin-bottom: 20px;
 }
 
@@ -389,7 +385,6 @@ body {
   background: #16a085;
   color: #fff;
 }
-
 .api-table tr:nth-child(even) {
   background: #f9f9f9;
 }

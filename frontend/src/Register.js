@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TextInput from './SharedComponents/TextInput';
-import './index.css'; 
+import './styles/index.css'; 
 import SharedSnackbar from './SharedComponents/SharedSnackbar';
 import { registerUser} from './services/apiService'; 
 

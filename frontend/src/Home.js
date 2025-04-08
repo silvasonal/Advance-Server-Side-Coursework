@@ -1,11 +1,13 @@
 // Home.js
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Trash3 } from "react-bootstrap-icons";
 import axios from 'axios';
-import './index.css';
+import './styles/index.css'; 
 import { jwtDecode } from 'jwt-decode';
 import Select from 'react-select';
 import { fetchCountryData, generateApiKey, fetchApiKeybyUserID, deleteApiKey } from './services/apiService';
+import SharedSnackbar from './SharedComponents/SharedSnackbar';
 
 const Home = () => {
   const [countryData, setCountryData] = useState(null);
@@ -15,7 +17,8 @@ const Home = () => {
   const [apiKeyError, setApiKeyError] = useState('');
   const [userApiKey, setUserApiKey] = useState('');
   const [userId, setUserId] = useState('');
-  const [countryDataError, setCountryDataError] = useState('');  
+  const [countryDataError, setCountryDataError] = useState('');
+  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
 
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
@@ -64,15 +67,15 @@ const Home = () => {
   const getCountryData = async (country) => {
     try {
       const response = await fetchCountryData(country, userApiKey);
-      
-      if (response ) {
-        setCountryData(response);  
+
+      if (response) {
+        setCountryData(response);
       } else {
         console.error('No valid country data found in the response');
         setCountryData(null);
-        setCountryDataError('No country data found.');  
+        setCountryDataError('No country data found.');
       }
-      
+
     } catch (error) {
       console.error('Error fetching country data:', error.response?.data || error.message || error);
       setCountryData(null);
@@ -88,6 +91,7 @@ const Home = () => {
       setApiKeyError('Failed to generate API key');
     }
   };
+
   const getApiKeys = async () => {
     try {
       const data = await fetchApiKeybyUserID(userId, token);
@@ -106,25 +110,35 @@ const Home = () => {
   const handleDeleteApiKey = async (id) => {
     try {
       await deleteApiKey(id, token);
+      setSnackbar({ open: true, message: 'Deleted successfully', severity: 'success' });
       getApiKeys();
     } catch (error) {
-      setApiKeyError('Failed to delete API key');
+      setSnackbar({ open: true, message: 'Failed to delete', severity: 'error' });
     }
   };
 
   return (
     <div>
 
+      {/* Country Data display */}
+      {countryDataError && (
+        <div className="error-message">
+          <p>{countryDataError}</p>
+        </div>
+      )}
+
       {/* API Keys section */}
       <div className="api-keys-section">
-        <button className="generate-api-key-btn" onClick={handleGenerateApiKey}>Generate API Key</button>
+        <button className="generate-api-key-btn" id="home_generate_api_key_btn" onClick={handleGenerateApiKey} disabled={apiKeys.length > 0} >Generate API Key</button>
         <h3>API Keys</h3>
         {apiKeyError && <p className="api-key-error">{apiKeyError}</p>}
         <ul className="api-key-list">
           {apiKeys.map((key) => (
             <li key={key.id}>
               <span>{key.api_key}</span>
-              <button onClick={() => handleDeleteApiKey(key.id)}>Delete</button>
+              <button className="btn btn-danger" id="home_delete_api_key_btn" onClick={() => { handleDeleteApiKey(key.id)}}>
+                <Trash3 size={20} />
+              </button>
             </li>
           ))}
         </ul>
@@ -135,7 +149,7 @@ const Home = () => {
         <h3>Select a Country</h3>
         <Select
           className="select-box"
-          id="countries"
+          id="home_country_select"
           value={countryCodes.find(option => option.value === selectedCountry)}
           onChange={(selectedOption) => setSelectedCountry(selectedOption.value)}
           options={countryCodes.map(country => ({
@@ -145,14 +159,6 @@ const Home = () => {
           placeholder="Select a country"
         />
       </div>
-
-
-      {/* Country Data display */}
-      {countryDataError && (
-        <div className="error-message">
-          <p>{countryDataError}</p>
-        </div>
-      )}
 
       {countryData && !countryDataError && (
         <div className="country-data">
@@ -169,6 +175,7 @@ const Home = () => {
           </p>
         </div>
       )}
+      <SharedSnackbar snackbar={snackbar} setSnackbar={setSnackbar} />
     </div>
   );
 };

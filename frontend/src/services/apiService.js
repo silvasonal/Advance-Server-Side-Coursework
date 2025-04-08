@@ -85,7 +85,6 @@ export const fetchCountryData = async (country, userApiKey) => {
     }
 };
 
-
 export const generateApiKey = async (token) => {
     try {
         const response = await axios.post(
