@@ -54,5 +54,14 @@ const getApiKeysByUserId = async (userId) => {
   }
 };
 
+const getApiKeys= async (userId) => {
+  try {
+      const result = await pool.query('SELECT * FROM api_keys');
+      return result.rows;
+  } catch (error) {
+      throw new Error('Error fetching API keys');
+  }
+};
 
-module.exports = { createApiKey, findApiKey, trackApiKeyUsage, deleteApiKey, getApiKeysByUserId };
+
+module.exports = { createApiKey, findApiKey, trackApiKeyUsage, deleteApiKey, getApiKeysByUserId, getApiKeys };

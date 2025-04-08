@@ -14,12 +14,6 @@ app.use(bodyParser.json()); // Parse JSON bodies
 // Authentication routes
 app.use('/auth', authRoutes);
 
-// Define the /home route in your server.js or relevant routes file
-app.get('/home', (req, res) => {
-  res.json({ message: 'Welcome to the home route!' });
-});
-
-
 // Start the server
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
