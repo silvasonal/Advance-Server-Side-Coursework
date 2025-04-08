@@ -38,8 +38,16 @@ const loginUser = async (username, password) => {
     // Generate JWT token
     const token = generateToken(user);
 
-    // Create login info
-    const loginInfo = await loginInfoDAO.createLoginInfo(user.id, token);
+    let loginInfo;
+
+    // Check if the user has alredy login before
+    const existingLogin = await loginInfoDAO.alreadyExistsUser(user.id);
+
+    if (existingLogin) {
+      loginInfo = loginInfoDAO.updateUserLoginInfo(user.id, token);
+    }else{
+      loginInfo = await loginInfoDAO.createLoginInfo(user.id, token);
+    }
 
     return {
       message: 'Login successful',
