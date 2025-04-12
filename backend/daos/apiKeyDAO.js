@@ -1,6 +1,6 @@
 const pool = require('../config/db');
 
-// Function to create a new API key
+// Create a new API key
 const createApiKey = async (userId, apiKey) => {
   try {
       const result = await pool.query(
@@ -13,7 +13,7 @@ const createApiKey = async (userId, apiKey) => {
   }
 };
 
-// Function to retrieve API key by userId
+// Retrieve API key by userId
 const findApiKey = async (apiKey) => {
   try {
     const result = await pool.query('SELECT * FROM api_keys WHERE api_key = $1', [apiKey]);
@@ -28,6 +28,7 @@ const findApiKey = async (apiKey) => {
   }
 };
 
+// Track API key usage
 const trackApiKeyUsage = async (apiKeyId) => {
   try {
       await pool.query('UPDATE api_keys SET last_used = NOW(), usage_count = usage_count + 1 WHERE id = $1', [apiKeyId]);
@@ -36,7 +37,7 @@ const trackApiKeyUsage = async (apiKeyId) => {
   }
 };
 
-
+// Delete an API key
 const deleteApiKey = async (apiKeyId) => {
   try {
       await pool.query('DELETE FROM api_keys WHERE id = $1', [apiKeyId]);
@@ -45,6 +46,7 @@ const deleteApiKey = async (apiKeyId) => {
   }
 };
 
+// Get all API keys by userId
 const getApiKeysByUserId = async (userId) => {
   try {
       const result = await pool.query('SELECT * FROM api_keys WHERE user_id = $1', [userId]);
@@ -54,6 +56,7 @@ const getApiKeysByUserId = async (userId) => {
   }
 };
 
+// Get all API keys
 const getApiKeys= async (userId) => {
   try {
       const result = await pool.query('SELECT * FROM api_keys');

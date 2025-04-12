@@ -6,7 +6,6 @@ const router = express.Router();
 const authenticateToken = require('../middleware/authMiddleware');
 const authenticateApiKey = require('../middleware/apiKeyMiddleware');
 const countryService = require('../services/countryService');
-const userDao = require('../daos/userDao');
 
 // User Registration Route
 router.post('/register', async (req, res) => {
@@ -190,5 +189,3 @@ router.get('/apiKeys/', authenticateToken, async (req, res) => {
 });
 
 module.exports = router;
-
-

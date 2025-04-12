@@ -31,7 +31,7 @@ const registerUser = async (username, password) => {
     return { error: 'Error registering user' };
   }
 };
-
+// Function to change user role
 const changeUserRole = async (userId, newRole) => {
   if (!['admin', 'user'].includes(newRole)) {
     return { error: 'Invalid role' };
@@ -48,6 +48,7 @@ const changeUserRole = async (userId, newRole) => {
   }
 };
 
+// Function to fetch all users
 const fetchAllUsers = async () => {
   try {
     const users = await userDao.getUsers();

@@ -1,6 +1,6 @@
 const pool = require('../config/db');
 
-// Function to create login information for the user
+// Create login information for the user
 const createLoginInfo = async (registerId, authToken) => {
   try {
     const result = await pool.query(
@@ -13,7 +13,7 @@ const createLoginInfo = async (registerId, authToken) => {
   }
 };
 
-// Function to check if the user already exists in the login_info table
+// Check if the user already exists in the login_info table
 const alreadyExistsUser = async (registerId) => {
   try {
     const result = await pool.query(
@@ -27,7 +27,7 @@ const alreadyExistsUser = async (registerId) => {
   }
 };
 
-// Function to update login information for the user
+// Update login information for the user
 const updateUserLoginInfo = async (registerId, authToken) => {
   try {
     const result = await pool.query(

@@ -1,6 +1,6 @@
 const pool = require('../config/db');
 
-// Function to create a new user
+// Create a new user
 const createUser = async (username, password) => {
   try {
     const result = await pool.query(
@@ -15,7 +15,7 @@ const createUser = async (username, password) => {
 };
 
 
-// Function to find a user by their username
+// Find a user by their username
 const findUserByUsername = async (username) => {
   try {
     const result = await pool.query(
@@ -29,7 +29,7 @@ const findUserByUsername = async (username) => {
   }
 };
 
-// Function to find a user 
+// Get all users
 const getUsers = async () => {
   try {
     const result = await pool.query('SELECT * FROM users');
@@ -39,7 +39,7 @@ const getUsers = async () => {
   }
 }
  
-// Function to update a user's role 
+// Update User Role
 const updateUserRole = async (userId, newRole) => {
   try {
     const result = await pool.query(
