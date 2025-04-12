@@ -14,6 +14,7 @@ const ApiKeys = () => {
         fetchData();
     }, [token]);
 
+    // Fetch API keys and users from the server requests
     const fetchData = async () => {
         try {
             const fetchedApiKeys = await fetchApiKeys(token);
@@ -26,10 +27,11 @@ const ApiKeys = () => {
     };
 
     const getUsername = (userId) => {
-        const user = users.find((u) => parseInt(u.id) === userId);
-        return user && user.username ? user.username : 'Unknown';
+        const user = users.find((u) => parseInt(u.id) === userId); // Find user by matching userId with the user's table 'id'
+        return user && user.username ? user.username : 'Unknown'; // Return the username or 'Unknown' if not found
     };
 
+    // Format date and time to a readable format
     const dataTimeFormat = (dateString) => {
         const date = new Date(dateString);
         const formattedDate = date.toLocaleString('en-US', {
@@ -45,6 +47,7 @@ const ApiKeys = () => {
         return formattedDate;
     };
 
+    // Handle delete action for API keys
     const handleDelete = async (id) => {
         try {
             await deleteApiKey(id, token);

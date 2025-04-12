@@ -13,9 +13,9 @@ const Login = ({ setToken }) => {
 
     const handleLogin = async () => {
         try {
-            const { token } = await loginUser(username, password); 
+            const { token } = await loginUser(username, password);  //Login user and get token
 
-            localStorage.setItem('token', token);
+            localStorage.setItem('token', token); //Store token in localStorage for session persistence
             setToken(token);
             setSnackbar({ open: true, message: 'Login successful!', severity: 'success' });
             setTimeout(() => {

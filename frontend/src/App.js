@@ -14,6 +14,7 @@ const App = () => {
   const [username, setUsername] = useState('');
   const [role, setRole] = useState('');  
 
+  // Check if the token is present in local storage and set it in state
   useEffect(() => {
     if(token) {
       const decodedToken = jwtDecode(token);
@@ -22,6 +23,7 @@ const App = () => {
     }
   }, [token]);
 
+  // Handle logout by removing the token from local storage and updating state
   const handleLogout = () => {
     localStorage.removeItem('token');
     setToken(null); 

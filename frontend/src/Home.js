@@ -1,4 +1,3 @@
-// Home.js
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Trash3 } from "react-bootstrap-icons";
@@ -18,6 +17,7 @@ const Home = () => {
   const [userApiKey, setUserApiKey] = useState('');
   const [userId, setUserId] = useState('');
   const [countryDataError, setCountryDataError] = useState('');
+  const [isApiUsageMaxedOut, setIsApiUsageMaxedOut] = useState(false);
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
 
   const navigate = useNavigate();
@@ -25,7 +25,7 @@ const Home = () => {
 
   useEffect(() => {
     if (!token) {
-      navigate('/login');
+      navigate('/login'); // Redirect to login if no token is found
       return;
     }
 
@@ -43,7 +43,7 @@ const Home = () => {
     }
   }, [userId]);
 
-
+  // Fetch country codes from the API and set them in state
   useEffect(() => {
     axios.get('https://restcountries.com/v3.1/all')
       .then(response => {
@@ -64,6 +64,7 @@ const Home = () => {
     }
   }, [selectedCountry]);
 
+  // Fetch data for a given country using the generated API key
   const getCountryData = async (country) => {
     try {
       const response = await fetchCountryData(country, userApiKey);
@@ -75,23 +76,29 @@ const Home = () => {
         setCountryData(null);
         setCountryDataError('No country data found.');
       }
-
+      // Refresh API key data after the API call to update the latest usage count
+      // This ensures features like dropdown disabling work without manual refresh
+      await getApiKeys();  
+      
     } catch (error) {
       console.error('Error fetching country data:', error.response?.data || error.message || error);
       setCountryData(null);
     }
   };
 
+  //Generate a new API key for the user
   const handleGenerateApiKey = async () => {
     try {
       await generateApiKey(token);
-      setApiKeyError('');
+      setApiKeyError(''); // Clear any previous error message
+      //Refresh the API key list to display the newly generated key
       getApiKeys();
     } catch (error) {
       setApiKeyError('Failed to generate API key');
     }
   };
 
+  //Fetch all API keys associated with the user
   const getApiKeys = async () => {
     try {
       const data = await fetchApiKeybyUserID(userId, token);
@@ -99,6 +106,10 @@ const Home = () => {
 
       if (data.length > 0) {
         setUserApiKey(data[0].api_key);
+
+        const isMaxed = data.some(key => key.usage_count >= 5); //max usage limit
+        setIsApiUsageMaxedOut(isMaxed); 
+
       } else {
         setApiKeyError('No API key found. Please generate one.');
       }
@@ -107,6 +118,7 @@ const Home = () => {
     }
   };
 
+  //Delete the API key for the user
   const handleDeleteApiKey = async (id) => {
     try {
       await deleteApiKey(id, token);
@@ -136,9 +148,12 @@ const Home = () => {
           {apiKeys.map((key) => (
             <li key={key.id}>
               <span>{key.api_key}</span>
-              <button className="btn btn-danger" id="home_delete_api_key_btn" onClick={() => { handleDeleteApiKey(key.id)}}>
-                <Trash3 size={20} />
-              </button>
+              <div className="actions">
+                <span className="usage-count"> (Usage Count: {key.usage_count})</span>
+                <button className="btn btn-danger" id="home_delete_api_key_btn" onClick={() => { handleDeleteApiKey(key.id)}}>
+                  <Trash3 size={20} />
+                </button>
+              </div>
             </li>
           ))}
         </ul>
@@ -157,6 +172,7 @@ const Home = () => {
             label: country.name,
           }))}
           placeholder="Select a country"
+          isDisabled={isApiUsageMaxedOut}
         />
       </div>
 

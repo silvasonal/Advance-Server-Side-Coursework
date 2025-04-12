@@ -22,9 +22,10 @@ const UserManagement = () => {
         }
     };
 
+    // Function to handle role change
     const handleRoleChange = (userId, newRole) => {
         setUpdatedRoles(prevRoles => ({
-            ...prevRoles,
+            ...prevRoles, // Update the state with the new role
             [userId]: newRole,  
         }));
     };
