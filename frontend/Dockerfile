@@ -1,13 +1,20 @@
-FROM node:16-alpine
+# Use Node base image
+FROM node:18
 
+# Create app directory
 WORKDIR /app
 
+# Install app dependencies
 COPY package*.json ./
-
 RUN npm install
 
+# Copy all frontend files
 COPY . .
 
-EXPOSE 3001
+# Build the React app
+RUN npm run build
 
-CMD ["npm", "start"]
+# Serve the app using a simple static server
+RUN npm install -g serve
+EXPOSE 3001
+CMD ["serve", "-s", "build", "-l", "3001"]

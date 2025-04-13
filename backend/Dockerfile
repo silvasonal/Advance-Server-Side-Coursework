@@ -1,21 +1,18 @@
-FROM node:16 AS builder
+# Use Node.js base image
+FROM node:18
 
+# Create app directory
 WORKDIR /app
 
+# Install app dependencies
 COPY package*.json ./
+RUN npm install
 
-# Install build dependencies and bcrypt
-RUN apt-get update && apt-get install -y python3 make g++ \
-    && npm install \
-    && npm rebuild bcrypt --build-from-source
-
-FROM node:16
-
-WORKDIR /app
-
-COPY --from=builder /app/node_modules ./node_modules
+# Copy app files
 COPY . .
 
+# Expose backend port
 EXPOSE 3000
 
-CMD ["npm", "start"]
+# Start the server
+CMD ["node", "app.js"]
