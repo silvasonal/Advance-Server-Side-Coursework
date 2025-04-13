@@ -7,27 +7,27 @@ git clone https://github.com/silvasonal/Advance-Server-Side-Coursework.git
 To run the project locally:
 
 # Frontend Setup:
-cd frontend
-npm install
-npm start
+1.cd frontend
+2.npm install
+3.npm start
 
 
 # Backend Setup:
-cd backend
-npm start
+1.cd backend
+2.npm start
 
 
 # To run the project using Docker:
 
 1. Make sure Docker is installed and running on your machine.
 2. Remove node_modules and package-lock.json from the backend directory to avoid conflicts:
-    Remove-Item -Recurse -Force .\backend\node_modules
-    Remove-Item -Force .\backend\package-lock.json
+    2.1.Remove-Item -Recurse -Force .\backend\node_modules
+    2.2.Remove-Item -Force .\backend\package-lock.json
 
 3. Stop any running containers (if any):
-    docker-compose down
+    3.1.docker-compose down
 
 4. Build and start the containers:
-    docker-compose up --build
+    4.1.docker-compose up --build
 
 
