@@ -14,7 +14,6 @@ npm start
 
 # Backend Setup:
 cd backend
-npm install
 npm start
 
 
