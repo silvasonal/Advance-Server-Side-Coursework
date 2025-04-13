@@ -1,5 +1,5 @@
 import React from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, NavLink } from "react-router-dom";
 import { PersonCircle, ArrowBarRight } from "react-bootstrap-icons";
 import { Nav } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -11,16 +11,22 @@ const Layout = ({ handleLogout, username, role }) => {
       <div className="bg-dark text-white d-flex flex-column p-3" style={{ minHeight: "100vh", width: "200px" }}>
         <h5 className="mb-4">Dashboard</h5>
 
-        <Nav defaultActiveKey="/home" className="flex-column">
-          <Nav.Link href="/home" className="text-white">Home</Nav.Link>
+        <Nav className="flex-column">
+          <Nav.Link as={NavLink} to="/home" className="text-white" activeClassName="active">
+            Home
+          </Nav.Link>
           {role === "admin" && (
             <>
-              <Nav.Link href="/home/user-management" className="text-white">User Management</Nav.Link>
-              <Nav.Link href="/home/api-keys" className="text-white">API Keys</Nav.Link>
+              <Nav.Link as={NavLink} to="/user-management" className="text-white" activeClassName="active">
+                User Management
+              </Nav.Link>
+              <Nav.Link as={NavLink} to="/api-keys" className="text-white" activeClassName="active">
+                API Keys
+              </Nav.Link>
             </>
           )}
         </Nav>
-        
+
         <div className="mt-auto pt-3 border-top border-secondary">
           <div className="d-flex align-items-center mb-2">
             <PersonCircle size={24} style={{ marginRight: "10px" }} />

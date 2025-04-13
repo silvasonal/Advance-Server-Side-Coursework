@@ -40,8 +40,9 @@ const App = () => {
           </>
         ) : (
           <>
-            <Route path="/home" element={<Layout handleLogout={handleLogout} username= {username} role={role} />}>
+            <Route path="/" element={<Layout handleLogout={handleLogout} username= {username} role={role} />}>
               <Route index element={<Home />} />
+              <Route path="home" element={<Home />} />
               <Route path="user-management" element={<UserManagement />} />
               <Route path="api-keys" element={<ApiKeys />} />
             </Route>
